@@ -9,12 +9,6 @@ output: github_document
 
 依下列指示，完成網站內文分析：
 
-- 爬取指定網站內容
-    - 學號結尾 0,4,8:[Ptt Tech_Job 版](https://www.ptt.cc/bbs/Tech_Job/index.html)
-    - 學號結尾 1,5,9:[Ptt NBA 版](https://www.ptt.cc/bbs/NBA/index.html)
-    - 學號結尾 2,6:[Ptt LoL 版](https://www.ptt.cc/bbs/LoL/index.html)
-    - 學號結尾 3,7:[Ptt movie 版](https://www.ptt.cc/bbs/movie/index.html)
-    
 - 試著爬出**至少100篇**文章（`30pt`）的**標題**、**推文數**與**作者ID**（各`10pt`）
     - 資料框欄位名稱：
         - **標題**：Title
@@ -41,16 +35,32 @@ output: github_document
 ## 網站資料爬取
 ```{r}
 #這是R Code Chunk
+#install.packages("rvest")
+#install.packages("XML")
 library(rvest) ##第一次使用要先安裝 install.packages("rvest")
-##read_html
-##html_nodes
-##html_text
+library(XML)
+pttNBA <- c("https://www.ptt.cc/bbs/NBA/index4600.html","https://www.ptt.cc/bbs/NBA/index4601.html", "https://www.ptt.cc/bbs/NBA/index4602.html", "https://www.ptt.cc/bbs/NBA/index4603.html", "https://www.ptt.cc/bbs/NBA/index4604.html", "https://www.ptt.cc/bbs/NBA/index4605.html", "https://www.ptt.cc/bbs/NBA/index4606.html")
+for(n in 1:7) {
+    pttNBAContent <- read_html(pttNBA[n])
+post_title <- pttNBAContent %>%
+    html_nodes(".title") %>% html_text()
+post_pushNum <- pttNBAContent %>%
+    html_nodes(".nrec") %>% html_text()
+post_author <- pttNBAContent %>%
+    html_nodes(".author") %>% html_text()
+if(n == 1) {
+    pttNBA_postsAll <- data.frame(Title = post_title, PushNum = post_pushNum, Author = post_author)
+} else {
+    pttNBA_posts <- data.frame(Title = post_title, PushNum = post_pushNum, Author = post_author)  
+    pttNBA_postsAll <- rbind(pttNBA_postsAll, pttNBA_posts)
+  }
+}
 ```
 
 ## 爬蟲結果呈現
 ```{r}
-#這是R Code Chunk
-knitr::kable(iris) ##請將iris取代為上個步驟中產生的爬蟲資料資料框
+knitr::kable(
+    pttNBA_postsAll[c("Title", "PushNum", "Author")])
 ```
 
 ## 解釋爬蟲結果 
