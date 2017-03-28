@@ -3,34 +3,6 @@ title: "長庚大學 大數據分析方法 作業三"
 output: github_document
 ---
 
-## 作業說明 （繳交時請直接刪除這個章節）
-
-作業目的：練習初級爬蟲，並將爬蟲結果整理成資料框data.frame
-
-依下列指示，完成網站內文分析：
-
-- 試著爬出**至少100篇**文章（`30pt`）的**標題**、**推文數**與**作者ID**（各`10pt`）
-    - 資料框欄位名稱：
-        - **標題**：Title
-        - **推文數**：PushNum
-        - **作者ID**：Author
-    - 一頁只有20篇，該怎麼辦？
-        - 提示：使用for + rbind()將分批爬取出的資料結合
-        - 範例：dataframeAll<-rbind(dataframe1,dataframe2) 
-        - 參考：[6.6 資料組合](http://yijutseng.github.io/DataScienceRBook/manipulation.html#section-6.6)
-    
-- 將爬取出的資料輸出至Markdown報告中（`10pt`）
-    - 使用knitr::kable(資料框物件)整理輸出
-    
-- 用文字搭配程式碼解釋爬蟲結果 
-    - 共爬出幾篇文章標題？（程式碼與文字解釋各`5pt`）
-        - dim(), nrow(), str()皆可
-    - 哪個作者文章數最多？（程式碼與文字解釋各`5pt`）
-        - table()
-    - 其他爬蟲結果解釋（`10pt`）
-        - 試著找出有趣的現象，不一定要用程式碼搭配解釋，也可只用文字
-
-    
 
 ## 網站資料爬取
 ```{r}
@@ -39,7 +11,7 @@ output: github_document
 #install.packages("XML")
 library(rvest) ##第一次使用要先安裝 install.packages("rvest")
 library(XML)
-pttNBA <- c("https://www.ptt.cc/bbs/NBA/index4600.html","https://www.ptt.cc/bbs/NBA/index4601.html", "https://www.ptt.cc/bbs/NBA/index4602.html", "https://www.ptt.cc/bbs/NBA/index4603.html", "https://www.ptt.cc/bbs/NBA/index4604.html", "https://www.ptt.cc/bbs/NBA/index4605.html", "https://www.ptt.cc/bbs/NBA/index4606.html")
+pttNBA <- c("https://www.ptt.cc/bbs/NBA/index4614.html","https://www.ptt.cc/bbs/NBA/index4615.html", "https://www.ptt.cc/bbs/NBA/index4616.html", "https://www.ptt.cc/bbs/NBA/index4617.html", "https://www.ptt.cc/bbs/NBA/index4618.html", "https://www.ptt.cc/bbs/NBA/index4619.html", "https://www.ptt.cc/bbs/NBA/index4620.html")
 for(n in 1:7) {
     pttNBAContent <- read_html(pttNBA[n])
 post_title <- pttNBAContent %>%
@@ -64,16 +36,30 @@ knitr::kable(
 ```
 
 ## 解釋爬蟲結果 
+- 共爬出幾篇文章標題？
 ```{r}
-#這是R Code Chunk
+str(pttNBA_postsAll)
 ```
 
-解釋解釋解釋解釋
+A: 總共有140篇文章。
 
+
+- 哪個作者文章數最多？
 ```{r}
-#這是R Code Chunk
+authorCount <- data.frame(Author = unique(pttNBA_postsAll$Author), Count = 0)
+for(i in 1:nrow(authorCount)) {
+    for(j in 1:nrow(pttNBA_postsAll)) {
+        if(authorCount$Author[i] == pttNBA_postsAll$Author[j]){
+            authorCount$Count[i] = authorCount$Count[i] + 1
+        }
+    }
+}
+authorCount <- authorCount[order(-authorCount$Count, authorCount$Author),]
+knitr::kable(
+    authorCount[1:5, c("Author", "Count")])
 ```
 
-解釋解釋解釋解釋
+A: 發文數排名前五名如上，Rambo的文章最多。
 
-人工結論與解釋解釋解釋解釋解釋解釋解釋
+- 其他爬蟲結果解釋
+    - 在NBA版有個文章分類是Live，應該是在有直撥比賽的時候的討論串。可以發現一些人氣較高的球隊的比賽關注人數及討論熱度都比較高，例如：勇士、騎士、火箭隊等，堆文數都到達「爆」的等級。其他像是一些八卦的討論串討論熱度也很高，由此可見台灣人有多愛八卦了。反而像是戰術分析之類的討論串討問熱度就不如前兩種高，所以我們可以推論出：喜歡觀賞NBA比賽的人不見得會（喜歡）打籃球。
