@@ -6,11 +6,8 @@ output: github_document
 
 ## 網站資料爬取
 ```{r}
-#這是R Code Chunk
 #install.packages("rvest")
-#install.packages("XML")
-library(rvest) ##第一次使用要先安裝 install.packages("rvest")
-library(XML)
+library(rvest)
 pttNBA <- c("https://www.ptt.cc/bbs/NBA/index4614.html","https://www.ptt.cc/bbs/NBA/index4615.html", "https://www.ptt.cc/bbs/NBA/index4616.html", "https://www.ptt.cc/bbs/NBA/index4617.html", "https://www.ptt.cc/bbs/NBA/index4618.html", "https://www.ptt.cc/bbs/NBA/index4619.html", "https://www.ptt.cc/bbs/NBA/index4620.html")
 for(n in 1:7) {
     pttNBAContent <- read_html(pttNBA[n])

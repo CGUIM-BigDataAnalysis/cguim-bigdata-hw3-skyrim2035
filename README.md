@@ -5,24 +5,11 @@
 ------------
 
 ``` r
-#這是R Code Chunk
 #install.packages("rvest")
-#install.packages("XML")
-library(rvest) ##第一次使用要先安裝 install.packages("rvest")
+library(rvest)
 ```
 
     ## Loading required package: xml2
-
-``` r
-library(XML)
-```
-
-    ## 
-    ## Attaching package: 'XML'
-
-    ## The following object is masked from 'package:rvest':
-    ## 
-    ##     xml
 
 ``` r
 pttNBA <- c("https://www.ptt.cc/bbs/NBA/index4614.html","https://www.ptt.cc/bbs/NBA/index4615.html", "https://www.ptt.cc/bbs/NBA/index4616.html", "https://www.ptt.cc/bbs/NBA/index4617.html", "https://www.ptt.cc/bbs/NBA/index4618.html", "https://www.ptt.cc/bbs/NBA/index4619.html", "https://www.ptt.cc/bbs/NBA/index4620.html")
